@@ -1,0 +1,41 @@
+:root .slick-dots li.slick-active div {
+  background-color: white !important;
+  width: 24px !important;
+  border-radius: 9999px !important;
+  transition: all 300ms ease-in-out !important;
+}
+
+.dark .slick-dots li.slick-active div {
+  background-color: rgb(237, 237, 237) !important;
+}
+
+:root .slick-dots li div {
+  margin: 0 !important;
+  transition: all 300ms ease-in-out !important;
+  background-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.dark .slick-dots li div {
+  background-color: rgba(237, 237, 237, 0.3) !important;
+}
+
+.slick-dots {
+  bottom: 24px !important;
+}
+
+.slick-slide > div {
+  outline: none;
+}
+
+.slick-slide {
+  outline: none;
+}
+
+.slick-track {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.slick-prev,
+.slick-next {
+  z-index: 10;
+}
