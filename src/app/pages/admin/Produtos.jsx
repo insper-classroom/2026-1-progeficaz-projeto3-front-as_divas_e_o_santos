@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card } from '../../components/Card';
-import { Button } from '../../components/Button';
-import { ThemeToggle } from '../../components/ThemeToggle';
+import { Card } from '../../components/ui/Card';
+import { Button } from '../../components/ui/Button';
+import { ThemeToggle } from '../../components/ui/ThemeToggle';
 import { LogOut, ShoppingBag, Package, Plus, Edit } from 'lucide-react';
 
 const products = [

@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, User, LogOut, Settings, MessageSquarePlus, Shield } from 'lucide-react';
-import { Button } from './Button';
-import { ThemeToggle } from './ThemeToggle';
+import { Button } from '../ui/Button';
+import { ThemeToggle } from '../ui/ThemeToggle';
 
 export const Header = ({ isLoggedIn = false, userName, isAdmin = false }) => {
   const navigate = useNavigate();

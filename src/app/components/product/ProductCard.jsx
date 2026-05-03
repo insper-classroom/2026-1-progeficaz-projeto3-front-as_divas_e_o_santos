@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { Card } from './Card';
-import { Button } from './Button';
+import { Card } from '../ui/Card';
+import { Button } from '../ui/Button';
 import { ShoppingCart } from 'lucide-react';
 import { PromotionBadge } from './PromotionBadge';
 

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Header } from '../components/Header';
-import { ProductCarousel } from '../components/ProductCarousel';
-import { ProductCard } from '../components/ProductCard';
+import { Header } from '../components/layout/Header';
+import { ProductCarousel } from '../components/product/ProductCarousel';
+import { ProductCard } from '../components/product/ProductCard';
 
 const featuredProducts = [
   {

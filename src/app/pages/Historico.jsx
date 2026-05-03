@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../components/Header';
-import { Card } from '../components/Card';
-import { Button } from '../components/Button';
+import { Header } from '../components/layout/Header';
+import { Card } from '../components/ui/Card';
+import { Button } from '../components/ui/Button';
 import { ArrowLeft, Package } from 'lucide-react';
 
 const reservationHistory = [
