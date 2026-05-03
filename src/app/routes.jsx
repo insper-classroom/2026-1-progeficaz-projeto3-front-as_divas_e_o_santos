@@ -1,12 +1,12 @@
 import { createBrowserRouter } from 'react-router-dom';
-import Login from './pages/Login';
-import Home from './pages/Home';
-import ProductDetail from './pages/ProductDetail';
-import Cadastro from './pages/Cadastro';
-import Perfil from './pages/Perfil';
-import Configuracoes from './pages/Configuracoes';
-import Sugestao from './pages/Sugestao';
-import Historico from './pages/Historico';
+import Login from './pages/user/Login';
+import Home from './pages/user/Home';
+import ProductDetail from './pages/user/ProductDetail';
+import Cadastro from './pages/user/Cadastro';
+import Perfil from './pages/user/Perfil';
+import Configuracoes from './pages/user/Configuracoes';
+import Sugestao from './pages/user/Sugestao';
+import Historico from './pages/user/Historico';
 
 import AdminLogin from './pages/admin/AdminLogin';
 import Dashboard from './pages/admin/Dashboard';

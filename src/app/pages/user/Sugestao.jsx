@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../components/layout/Header';
-import { Card } from '../components/ui/Card';
-import { Button } from '../components/ui/Button';
+import { Header } from '../../components/layout/Header';
+import { Card } from '../../components/ui/Card';
+import { Button } from '../../components/ui/Button';
 import { MessageSquarePlus } from 'lucide-react';
 
 export default function Sugestao() {

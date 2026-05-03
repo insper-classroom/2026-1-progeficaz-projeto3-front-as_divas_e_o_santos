@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
+import { Button } from '../../components/ui/Button';
+import { Input } from '../../components/ui/Input';
 import { ShoppingBag } from 'lucide-react';
 
 export default function Login() {
@@ -16,7 +16,6 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left Section - Image */}
       <div className="hidden lg:flex lg:w-[65%] relative">
         <img
           src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&h=1080&fit=crop"
@@ -32,10 +31,8 @@ export default function Login() {
         </div>
       </div>
 
-      {/* Right Section - Login Form */}
       <div className="w-full lg:w-[35%] bg-background flex items-center justify-center p-8">
         <div className="w-full max-w-[400px]">
-          {/* Logo and Title */}
           <div className="mb-10">
             <div className="flex items-center gap-3 mb-8">
               <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center shadow-md">
@@ -52,7 +49,6 @@ export default function Login() {
             </p>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleLogin} className="space-y-6">
             <Input
               label="Email"
@@ -93,7 +89,6 @@ export default function Login() {
             </Button>
           </form>
 
-          {/* Sign Up Link */}
           <div className="mt-8 pt-6 border-t border-border">
             <p className="text-sm text-muted-foreground">
               Não tem uma conta?{' '}

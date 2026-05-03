@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Header } from '../components/layout/Header';
-import { Card } from '../components/ui/Card';
-import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
-import { PromotionBadge } from '../components/product/PromotionBadge';
+import { Header } from '../../components/layout/Header';
+import { Card } from '../../components/ui/Card';
+import { Button } from '../../components/ui/Button';
+import { Input } from '../../components/ui/Input';
+import { PromotionBadge } from '../../components/product/PromotionBadge';
 import { ArrowLeft, Minus, Plus, Tag } from 'lucide-react';
 
 const productDetails = {
