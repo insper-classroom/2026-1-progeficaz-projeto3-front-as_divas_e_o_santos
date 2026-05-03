@@ -12,6 +12,9 @@ Através da aplicação, o usuário pode:
 * Consultar informações sobre os itens
 * Realizar a reserva de produtos diretamente com a loja
 * Atualizar informações de cadastro
+* Enviar sugestões à loja
+
+Além disso, há uma área administrativa para controle de produtos e reservas.
 
 ---
 
@@ -20,7 +23,8 @@ Através da aplicação, o usuário pode:
 * React
 * Vite
 * JavaScript
-* HTML e CSS
+* HTML
+* CSS
 
 ---
 
