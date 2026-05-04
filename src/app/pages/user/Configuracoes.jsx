@@ -5,6 +5,7 @@ import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { useTheme } from '../../context/ThemeContext';
 import { Settings, Bell, Shield, Palette } from 'lucide-react';
+import { Footer } from '../../components/layout/Footer';
 
 export default function Configuracoes() {
   const navigate = useNavigate();
@@ -133,6 +134,7 @@ export default function Configuracoes() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

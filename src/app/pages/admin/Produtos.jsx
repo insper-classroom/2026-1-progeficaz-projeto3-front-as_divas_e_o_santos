@@ -4,6 +4,9 @@ import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { ThemeToggle } from '../../components/ui/ThemeToggle';
 import { LogOut, ShoppingBag, Package, Plus, Edit } from 'lucide-react';
+import { Footer } from '../../components/layout/Footer';
+import { HeaderAdmin } from '../../components/layout/HeaderAdmin';
+
 
 const products = [
   {
@@ -74,37 +77,8 @@ export default function Produtos() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-accent">
-      <header className="bg-background/95 backdrop-blur-sm border-b border-border sticky top-0 z-40 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center shadow-md">
-                <ShoppingBag className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-xl font-bold text-primary hidden sm:inline">Admin Insper Store</span>
-            </div>
-
-            <nav className="flex items-center gap-2 sm:gap-4">
-              <ThemeToggle />
-              <Button variant="ghost" size="sm" onClick={() => navigate('/admin/dashboard')}>
-                Dashboard
-              </Button>
-              <Button variant="ghost" size="sm" onClick={() => navigate('/admin/agendamentos')}>
-                Reservas
-              </Button>
-              <Button variant="ghost" size="sm" onClick={() => navigate('/admin/produtos')} className="text-primary">
-                Produtos
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => navigate('/')} className="gap-1.5">
-                <LogOut className="w-4 h-4" />
-                Sair
-              </Button>
-            </nav>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <HeaderAdmin userName="Admin" />
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
             <div className="flex items-center gap-3 mb-2">
@@ -198,6 +172,7 @@ export default function Produtos() {
           </table>
         </Card>
       </main>
+      <Footer />
     </div>
   );
 }

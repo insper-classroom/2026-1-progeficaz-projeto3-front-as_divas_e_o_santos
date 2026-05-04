@@ -3,6 +3,7 @@ import { Header } from '../../components/layout/Header';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { ArrowLeft, Package } from 'lucide-react';
+import { Footer } from '../../components/layout/Footer';
 
 const reservationHistory = [
   {
@@ -105,6 +106,7 @@ export default function Historico() {
           )}
         </Card>
       </main>
+      <Footer />
     </div>
   );
 }

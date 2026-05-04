@@ -4,6 +4,9 @@ import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { ThemeToggle } from "../../components/ui/ThemeToggle";
 import { LogOut, ShoppingBag, X, MessageSquare, Edit2, Save } from "lucide-react";
+import { Footer } from '../../components/layout/Footer';
+import { HeaderAdmin } from '../../components/layout/HeaderAdmin';
+
 
 const reservations = [
   {
@@ -139,57 +142,8 @@ export default function Agendamentos() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-accent">
-      <header className="bg-background/95 backdrop-blur-sm border-b border-border sticky top-0 z-40 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center shadow-md">
-                <ShoppingBag className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-xl font-bold text-primary hidden sm:inline">
-                Admin Insper Store
-              </span>
-            </div>
-
-            <nav className="flex items-center gap-2 sm:gap-4">
-              <ThemeToggle />
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate("/admin/dashboard")}
-              >
-                Dashboard
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate("/admin/agendamentos")}
-                className="text-primary"
-              >
-                Reservas
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate("/admin/produtos")}
-              >
-                Produtos
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => navigate("/")}
-                className="gap-1.5"
-              >
-                <LogOut className="w-4 h-4" />
-                Sair
-              </Button>
-            </nav>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <HeaderAdmin userName="Admin" />
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
             Gestão de Reservas
@@ -402,38 +356,8 @@ export default function Agendamentos() {
             </Card>
           </div>
         </div>
-
-        <Card className="p-6">
-          <div className="flex items-center gap-2 mb-6">
-            <MessageSquare className="w-5 h-5 text-primary" />
-            <h2 className="text-xl font-bold text-foreground">
-              Sugestões dos Usuários
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {suggestions.map((suggestion) => (
-              <Card
-                key={suggestion.id}
-                className="p-4 border-2 hover:shadow-md transition-all"
-                hover
-              >
-                <div className="mb-3">
-                  <p className="font-semibold text-foreground mb-1">
-                    {suggestion.userName}
-                  </p>
-                  <p className="text-xs text-muted-foreground mb-2">
-                    {suggestion.date}
-                  </p>
-                </div>
-                <p className="text-sm text-foreground leading-relaxed">
-                  {suggestion.message}
-                </p>
-              </Card>
-            ))}
-          </div>
-        </Card>
       </main>
+      <Footer />
     </div>
   );
 }

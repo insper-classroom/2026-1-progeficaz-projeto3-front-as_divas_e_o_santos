@@ -4,6 +4,7 @@ import { Header } from '../../components/layout/Header';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { MessageSquarePlus } from 'lucide-react';
+import { Footer } from '../../components/layout/Footer';
 
 export default function Sugestao() {
   const navigate = useNavigate();
@@ -64,6 +65,7 @@ export default function Sugestao() {
           </form>
         </Card>
       </main>
+      <Footer />
     </div>
   );
 }

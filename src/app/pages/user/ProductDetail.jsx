@@ -6,6 +6,7 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { PromotionBadge } from '../../components/product/PromotionBadge';
 import { ArrowLeft, Minus, Plus, Tag } from 'lucide-react';
+import { Footer } from '../../components/layout/Footer';
 
 const productDetails = {
   1: {
@@ -67,7 +68,7 @@ export default function ProductDetail() {
     <div className="min-h-screen bg-background">
       <Header isLoggedIn={true} userName="João Silva" />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <button
           onClick={() => navigate('/')}
           className="flex items-center gap-2 text-muted-foreground hover:text-primary mb-6 transition-all duration-200 hover:translate-x-[-4px]"
@@ -209,6 +210,7 @@ export default function ProductDetail() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

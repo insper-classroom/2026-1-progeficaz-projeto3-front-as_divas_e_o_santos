@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Header } from '../../components/layout/Header';
 import { ProductCarousel } from '../../components/product/ProductCarousel';
 import { ProductCard } from '../../components/product/ProductCard';
+import { Footer } from '../../components/layout/Footer';
 
 const featuredProducts = [
   {
@@ -36,6 +37,7 @@ const products = [
   {
     id: 1,
     name: 'Moletom Insper Premium',
+    description: 'Moletom premium em edição limitada com bordado exclusivo',
     price: 151.92,
     originalPrice: 189.90,
     discount: 20,
@@ -44,6 +46,7 @@ const products = [
   {
     id: 2,
     name: 'Camiseta Insper Básica',
+    description: 'Camiseta confortável para o dia a dia.',
     price: 71.91,
     originalPrice: 79.90,
     discount: 10,
@@ -52,12 +55,14 @@ const products = [
   {
     id: 3,
     name: 'Boné Insper',
+    description: 'Boné leve com ajuste regulável.',
     price: 59.90,
     image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&h=400&fit=crop'
   },
   {
     id: 4,
     name: 'Mochila Insper',
+    description: 'Design moderno com compartimentos funcionais, garantindo organização e praticidade para sua rotina.',
     price: 212.42,
     originalPrice: 249.90,
     discount: 15,
@@ -66,12 +71,14 @@ const products = [
   {
     id: 5,
     name: 'Caneca Insper',
+    description: 'Caneca resistente e elegante, perfeita para seu café do dia a dia.',
     price: 39.90,
     image: 'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=400&h=400&fit=crop'
   },
   {
     id: 6,
     name: 'Garrafa Térmica',
+    description: 'Garrafa térmica que mantém sua bebida na temperatura ideal por horas.',
     price: 71.92,
     originalPrice: 89.90,
     discount: 20,
@@ -136,6 +143,7 @@ export default function Home() {
           </div>
         </motion.section>
       </main>
+      <Footer />
     </div>
   );
 }
