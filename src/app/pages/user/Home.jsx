@@ -86,7 +86,7 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-accent">
       <Header isLoggedIn={isLoggedIn} userName="João Silva" isAdmin={true} />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -94,7 +94,7 @@ export default function Home() {
           className="mb-16"
         >
           <div className="mb-6">
-            <h2 className="text-3xl font-bold text-foreground mb-2">Ofertas Especiais</h2>
+            <h2 className="text-3xl font-extrabold text-foreground mb-2">Ofertas Especiais</h2>
             <p className="text-muted-foreground">Aproveite nossos produtos em destaque com descontos exclusivos</p>
           </div>
           <ProductCarousel products={featuredProducts} />

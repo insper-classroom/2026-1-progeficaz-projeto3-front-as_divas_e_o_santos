@@ -2,6 +2,8 @@
 
 :root,
 .light {
+  --font-body: "Open Sans", sans-serif;
+  --font-title: "Cormorant Garamond", serif;
   --font-size: 16px;
   --background: #ffffff;
   --foreground: #1a1a1a;
@@ -9,7 +11,7 @@
   --card-foreground: #1a1a1a;
   --popover: #ffffff;
   --popover-foreground: #1a1a1a;
-  --primary: #C8102E;
+  --primary: #d10204;
   --primary-foreground: #ffffff;
   --secondary: #f5f5f5;
   --secondary-foreground: #1a1a1a;
@@ -25,8 +27,8 @@
   --switch-background: #cbced4;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: #C8102E;
-  --chart-1: #C8102E;
+  --ring: #d10204;
+  --chart-1: #d10204;
   --chart-2: #6b7280;
   --chart-3: #f3f4f6;
   --chart-4: #1a1a1a;
@@ -34,22 +36,24 @@
   --radius: 0.5rem;
   --sidebar: #f9fafb;
   --sidebar-foreground: #1a1a1a;
-  --sidebar-primary: #C8102E;
+  --sidebar-primary: #d10204;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #f3f4f6;
   --sidebar-accent-foreground: #1a1a1a;
   --sidebar-border: #e5e7eb;
-  --sidebar-ring: #C8102E;
+  --sidebar-ring: #d10204;
 }
 
 .dark {
+  --font-body: "Open Sans", sans-serif;
+  --font-title: "Cormorant Garamond", serif;
   --background: #0a0a0a;
   --foreground: #ededed;
   --card: #141414;
   --card-foreground: #ededed;
   --popover: #141414;
   --popover-foreground: #ededed;
-  --primary: #E63946;
+  --primary: #a90003;
   --primary-foreground: #ffffff;
   --secondary: #1f1f1f;
   --secondary-foreground: #ededed;
@@ -65,8 +69,8 @@
   --switch-background: #404040;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: #E63946;
-  --chart-1: #E63946;
+  --ring: #a90003;
+  --chart-1: #a90003;
   --chart-2: #a1a1a1;
   --chart-3: #404040;
   --chart-4: #ededed;
@@ -74,12 +78,12 @@
   --radius: 0.5rem;
   --sidebar: #141414;
   --sidebar-foreground: #ededed;
-  --sidebar-primary: #E63946;
+  --sidebar-primary: #a90003;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #1f1f1f;
   --sidebar-accent-foreground: #ededed;
   --sidebar-border: #2a2a2a;
-  --sidebar-ring: #E63946;
+  --sidebar-ring: #a90003;
 }
 
 @theme inline {
@@ -134,6 +138,7 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-body);
   }
 
   .dark {
@@ -171,29 +176,6 @@
     font-size: var(--font-size);
   }
 
-  h1 {
-    font-size: var(--text-2xl);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  h2 {
-    font-size: var(--text-xl);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  h3 {
-    font-size: var(--text-lg);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  h4 {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
 
   label {
     font-size: var(--text-base);
@@ -212,4 +194,9 @@
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
   }
+
+  h2, h1 {
+    font-family: var(--font-title);
+  }
+
 }
