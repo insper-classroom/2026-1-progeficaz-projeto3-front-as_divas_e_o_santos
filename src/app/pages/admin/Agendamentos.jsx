@@ -6,6 +6,7 @@ import { ThemeToggle } from "../../components/ui/ThemeToggle";
 import { LogOut, ShoppingBag, X, MessageSquare, Edit2, Save } from "lucide-react";
 import { Footer } from '../../components/layout/Footer';
 import { HeaderAdmin } from '../../components/layout/HeaderAdmin';
+import { CancellationModal } from "../../components/admin/CancellationModal";
 
 
 const reservations = [
@@ -15,6 +16,8 @@ const reservations = [
     product: "Moletom Insper Premium",
     pickupDate: "27/04/2026",
     pickupTime: "09:00",
+    email: "joao.silva@insper.edu.br",
+    phone: "(11) 98765-4321",
   },
   {
     id: 2,
@@ -22,6 +25,8 @@ const reservations = [
     product: "Boné Insper",
     pickupDate: "27/04/2026",
     pickupTime: "10:30",
+    email: "maria.santos@insper.edu.br",
+    phone: "(11) 97654-3210",
   },
   {
     id: 3,
@@ -29,6 +34,8 @@ const reservations = [
     product: "Mochila Insper",
     pickupDate: "27/04/2026",
     pickupTime: "14:00",
+    email: "pedro.oliveira@insper.edu.br",
+    phone: "(11) 96543-2109",
   },
   {
     id: 4,
@@ -36,6 +43,8 @@ const reservations = [
     product: "Kit Insper Completo",
     pickupDate: "28/04/2026",
     pickupTime: "11:00",
+    email: "ana.costa@insper.edu.br",
+    phone: "(11) 95432-1098",
   },
   {
     id: 5,
@@ -43,6 +52,8 @@ const reservations = [
     product: "Camiseta Insper Básica",
     pickupDate: "28/04/2026",
     pickupTime: "15:30",
+    email: "lucas.ferreira@insper.edu.br",
+    phone: "(11) 94321-0987",
   },
   {
     id: 6,
@@ -50,28 +61,8 @@ const reservations = [
     product: "Garrafa Térmica",
     pickupDate: "29/04/2026",
     pickupTime: "09:30",
-  },
-];
-
-const suggestions = [
-  {
-    id: 1,
-    userName: "Carlos Mendes",
-    message:
-      "Seria ótimo ter opções de produtos sustentáveis, como garrafas de material reciclado.",
-    date: "26/04/2026",
-  },
-  {
-    id: 2,
-    userName: "Julia Ferreira",
-    message: "Gostaria de ver mais opções de cores para as camisetas.",
-    date: "25/04/2026",
-  },
-  {
-    id: 3,
-    userName: "Ricardo Santos",
-    message: "Sugiro adicionar um sistema de pontos para clientes frequentes.",
-    date: "24/04/2026",
+    email: "fernanda.lima@insper.edu.br",
+    phone: "(11) 93210-9876",
   },
 ];
 
@@ -79,6 +70,21 @@ export default function Agendamentos() {
   const navigate = useNavigate();
   const [reservationList, setReservationList] = useState(reservations);
   const [isEditingSchedule, setIsEditingSchedule] = useState(false);
+  const [selectedReservation, setSelectedReservation] = useState(null);
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+
+const handleOpenCancelModal = (reservation) => {
+  setSelectedReservation(reservation);
+  setIsCancelModalOpen(true);
+};
+
+const handleConfirmCancel = (reservation) => {
+  setReservationList((currentList) =>
+    currentList.filter((res) => res.id !== reservation.id)
+  );
+  setIsCancelModalOpen(false);
+  setSelectedReservation(null);
+};
 
   const [schedule, setSchedule] = useState([
     { day: "Domingo", open: "", close: "", isOpen: false },
@@ -129,10 +135,6 @@ export default function Agendamentos() {
     },
     { day: "Sábado", open: "", close: "", isOpen: false },
   ]);
-
-  const handleCancelReservation = (id) => {
-    setReservationList(reservationList.filter((res) => res.id !== id));
-  };
 
   const handleScheduleChange = (index, field, value) => {
     const newSchedule = [...schedule];
@@ -196,9 +198,7 @@ export default function Agendamentos() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() =>
-                              handleCancelReservation(reservation.id)
-                            }
+                            onClick={() => handleOpenCancelModal(reservation)}
                             className="gap-1.5 border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
                           >
                             <X className="w-4 h-4" />
@@ -357,6 +357,15 @@ export default function Agendamentos() {
           </div>
         </div>
       </main>
+    <CancellationModal
+      isOpen={isCancelModalOpen}
+      onClose={() => {
+        setIsCancelModalOpen(false);
+        setSelectedReservation(null);
+      }}
+      reservation={selectedReservation}
+      onConfirm={handleConfirmCancel}
+    />
       <Footer />
     </div>
   );
