@@ -34,7 +34,7 @@ O projeto completo (frontend + backend) está disponível online através de dep
 
 Você pode acessá-lo pelo link abaixo:
 
-🔗 <LINK_DO_PROJETO>
+http://loja-insper-frontend.s3-website.us-east-2.amazonaws.com
 
 ---
 
