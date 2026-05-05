@@ -1,5 +1,6 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { isAuthenticated, isCurrentUserAdmin } from "../../utils/auth";
+import { isAuthenticated } from "../../utils/auth";
+import { isCurrentUserAdmin } from "../../../data/user";
 
 export default function RequireAdmin() {
   const location = useLocation();

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "../../components/layout/Header";
 import { Card } from "../../components/ui/Card";
@@ -7,130 +7,47 @@ import { ArrowLeft, Package } from "lucide-react";
 import { Footer } from "../../components/layout/Footer";
 import { isAuthenticated } from "../../utils/auth";
 import { UserCancellationModal } from "../../components/ui/UserCancellationModal";
-import api from "../../utils/api";
-
-const normalizeProfileResponse = (data) => {
-  const profile = data?.user ?? data?.perfil ?? data?.profile ?? data ?? null;
-
-  const rawReservations =
-    data?.reservas ??
-    data?.reservations ??
-    profile?.reservas ??
-    profile?.reservations ??
-    [];
-
-  return {
-    profile,
-    reservations: Array.isArray(rawReservations) ? rawReservations : [],
-  };
-};
-
-const mapReservationToUi = (reservation) => {
-  const rawStatus = reservation?.status ?? "ativa";
-
-  return {
-    id: reservation?._id ?? reservation?.id ?? reservation?.reserva_id ?? "",
-    productName:
-      reservation?.productName ??
-      reservation?.nome_produto ??
-      reservation?.produto_nome ??
-      reservation?.produto?.nome ??
-      "Produto",
-    image:
-      reservation?.image ??
-      reservation?.image_url ??
-      reservation?.produto?.image_url ??
-      "/images/product-placeholder.jpg",
-    pickupDate:
-      reservation?.pickupDate ??
-      reservation?.data_retirada ??
-      reservation?.dataRetirada ??
-      reservation?.data ??
-      "",
-    status:
-      rawStatus === "ativa"
-        ? "Agendado"
-        : rawStatus === "retirada"
-          ? "Retirado"
-          : rawStatus === "cancelada"
-            ? "Cancelado"
-            : String(rawStatus),
-    rawStatus,
-  };
-};
+import { currentUser as getCurrentUser } from "../../../data/user";
+import {backendReservations, mapBackendReservationToUi} from "../../../data/reservas";
+import { getBackendProductById } from "../../../data/products";
 
 export default function Historico() {
-  const navigate = useNavigate();
-  const isLoggedIn = isAuthenticated();
+  const currentUser = getCurrentUser();
 
-  const [profile, setProfile] = useState(null);
-  const [reservations, setReservations] = useState([]);
+  const initialReservations = currentUser
+    ? backendReservations
+        .filter((reservation) => reservation.usuario_id === currentUser.id)
+        .map((reservation) =>
+          mapBackendReservationToUi(
+            reservation,
+            getBackendProductById(reservation.produto_id)
+          )
+        )
+    : [];
+    
+  const navigate = useNavigate();
+  const [reservations, setReservations] = useState(initialReservations);
   const [selectedReservation, setSelectedReservation] = useState(null);
   const [isCancelOpen, setIsCancelOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  const loadHistory = async () => {
-    try {
-      setLoading(true);
-      setError("");
-
-      const response = await api.get("/user/perfil", {
-        withCredentials: true,
-      });
-
-      const { profile: loadedProfile, reservations: loadedReservations } =
-        normalizeProfileResponse(response.data);
-
-      setProfile(loadedProfile);
-      setReservations(loadedReservations.map(mapReservationToUi));
-    } catch (err) {
-      if (err?.response?.status === 401) {
-        navigate("/login", { replace: true });
-        return;
-      }
-
-      setError("Não foi possível carregar o histórico.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadHistory();
-  }, []);
 
   const handleOpenCancelModal = (reservation) => {
     setSelectedReservation(reservation);
     setIsCancelOpen(true);
   };
 
-  const handleConfirmCancel = async (reservationToCancel) => {
-    try {
-      await api.post(
-        `/user/reserva/${reservationToCancel.id}/cancelar`,
-        {},
-        { withCredentials: true }
-      );
-
-      setReservations((current) =>
-        current.filter((item) => item.id !== reservationToCancel.id)
-      );
-      setIsCancelOpen(false);
-      setSelectedReservation(null);
-    } catch (err) {
-      if (err?.response?.status === 401) {
-        navigate("/login", { replace: true });
-        return;
-      }
-
-      setError("Não foi possível cancelar a reserva.");
-    }
+  const handleConfirmCancel = (reservationToCancel) => {
+    setReservations((current) =>
+      current.filter((item) => item.id !== reservationToCancel.id)
+    );
+    setIsCancelOpen(false);
+    setSelectedReservation(null);
   };
+
+  const isLoggedIn = isAuthenticated();
 
   return (
     <div className="min-h-screen bg-background">
-      <Header isLoggedIn={isLoggedIn} userName={profile?.nome ?? ""} />
+      <Header isLoggedIn={isLoggedIn} userName={currentUser?.nome ?? ''} />
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <button
@@ -153,81 +70,65 @@ export default function Historico() {
           </p>
         </div>
 
-        {loading ? (
-          <Card className="p-6">
-            <p className="text-muted-foreground">Carregando histórico...</p>
-          </Card>
-        ) : error ? (
-          <Card className="p-6">
-            <p className="text-muted-foreground">{error}</p>
-          </Card>
-        ) : (
-          <Card className="p-6">
-            <div className="space-y-4">
-              {reservations.map((reservation) => (
-                <div
-                  key={reservation.id}
-                  className="flex flex-col gap-4 p-4 border border-border rounded-lg hover:shadow-md hover:bg-accent transition-all sm:flex-row sm:items-center"
-                >
-                  <img
-                    src={reservation.image}
-                    alt={reservation.productName}
-                    className="w-20 h-20 object-cover rounded border border-border"
-                  />
+        <Card className="p-6">
+          <div className="space-y-4">
+            {reservations.map((reservation) => (
+              <div
+                key={reservation.id}
+                className="flex flex-col gap-4 p-4 border border-border rounded-lg hover:shadow-md hover:bg-accent transition-all sm:flex-row sm:items-center"
+              >
+                <img
+                  src={reservation.image}
+                  alt={reservation.productName}
+                  className="w-20 h-20 object-cover rounded border border-border"
+                />
 
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-foreground mb-1">
-                      {reservation.productName}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      Data de retirada:{" "}
-                      {reservation.pickupDate
-                        ? new Date(reservation.pickupDate).toLocaleDateString(
-                            "pt-BR"
-                          )
-                        : "Sem data"}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <span
-                      className={`px-3 py-1.5 rounded-full text-sm font-medium ${
-                        reservation.status === "Agendado"
-                          ? "bg-primary/10 text-primary border border-primary/20"
-                          : reservation.status === "Retirado"
-                            ? "bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800"
-                            : "bg-muted text-muted-foreground border border-border"
-                      }`}
-                    >
-                      {reservation.status}
-                    </span>
-
-                    {reservation.rawStatus === "ativa" && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleOpenCancelModal(reservation)}
-                        className="gap-1.5 border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
-                      >
-                        Cancelar
-                      </Button>
-                    )}
-                  </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-foreground mb-1">
+                    {reservation.productName}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Data de retirada:{" "}
+                    {new Date(reservation.pickupDate).toLocaleDateString("pt-BR")}
+                  </p>
                 </div>
-              ))}
-            </div>
 
-            {reservations.length === 0 && (
-              <div className="text-center py-12">
-                <Package className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground mb-4">
-                  Nenhuma reserva encontrada
-                </p>
-                <Button onClick={() => navigate("/")}>Ir para a loja</Button>
+                <div className="flex items-center gap-3">
+                  <span
+                    className={`px-3 py-1.5 rounded-full text-sm font-medium ${
+                      reservation.status === "Agendado"
+                        ? "bg-primary/10 text-primary border border-primary/20"
+                        : "bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800"
+                    }`}
+                  >
+                    {reservation.status}
+                  </span>
+
+                  {reservation.status === "Agendado" && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleOpenCancelModal(reservation)}
+                      className="gap-1.5 border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    >
+                      Cancelar
+                    </Button>
+                  )}
+                </div>
               </div>
-            )}
-          </Card>
-        )}
+            ))}
+          </div>
+
+          {reservations.length === 0 && (
+            <div className="text-center py-12">
+              <Package className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+              <p className="text-muted-foreground mb-4">
+                Nenhuma reserva encontrada
+              </p>
+              <Button onClick={() => navigate("/")}>Ir para a loja</Button>
+            </div>
+          )}
+        </Card>
       </main>
 
       <UserCancellationModal
