@@ -5,49 +5,28 @@ import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { ArrowLeft, Package } from "lucide-react";
 import { Footer } from "../../components/layout/Footer";
-import { UserCancellationModal } from "../../components/ui/UserCancellationModal";
 import { isAuthenticated } from "../../utils/auth";
-import { currentUser } from "../../../data/user";
+import { UserCancellationModal } from "../../components/ui/UserCancellationModal";
 import { currentUser as getCurrentUser } from "../../../data/user";
-
-const reservationHistory = [
-  {
-    id: 1,
-    productName: "Moletom Insper Premium",
-    pickupDate: "2026-04-25",
-    status: "Agendado",
-    pickupTime: "09:00",
-    image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=100&h=100&fit=crop",
-  },
-  {
-    id: 2,
-    productName: "Camiseta Insper Básica",
-    pickupDate: "2026-04-28",
-    status: "Agendado",
-    pickupTime: "09:00",
-    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100&h=100&fit=crop",
-  },
-  {
-    id: 3,
-    productName: "Boné Insper",
-    pickupDate: "2026-04-15",
-    status: "Retirado",
-    pickupTime: "09:00",
-    image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=100&h=100&fit=crop",
-  },
-  {
-    id: 4,
-    productName: "Mochila Insper",
-    pickupDate: "2026-03-10",
-    status: "Retirado",
-    pickupTime: "09:00",
-    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=100&h=100&fit=crop",
-  },
-];
+import {backendReservations, mapBackendReservationToUi} from "../../../data/reservas";
+import { getBackendProductById } from "../../../data/products";
 
 export default function Historico() {
+  const currentUser = getCurrentUser();
+
+  const initialReservations = currentUser
+    ? backendReservations
+        .filter((reservation) => reservation.usuario_id === currentUser.id)
+        .map((reservation) =>
+          mapBackendReservationToUi(
+            reservation,
+            getBackendProductById(reservation.produto_id)
+          )
+        )
+    : [];
+    
   const navigate = useNavigate();
-  const [reservations, setReservations] = useState(reservationHistory);
+  const [reservations, setReservations] = useState(initialReservations);
   const [selectedReservation, setSelectedReservation] = useState(null);
   const [isCancelOpen, setIsCancelOpen] = useState(false);
 
@@ -65,7 +44,6 @@ export default function Historico() {
   };
 
   const isLoggedIn = isAuthenticated();
-  const currentUser = getCurrentUser();
 
   return (
     <div className="min-h-screen bg-background">

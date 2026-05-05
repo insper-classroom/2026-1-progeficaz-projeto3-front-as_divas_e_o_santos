@@ -1,19 +1,17 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Header } from '../../components/layout/Header';
 import { ProductCarousel } from '../../components/product/ProductCarousel';
 import { ProductCard } from '../../components/product/ProductCard';
 import { Footer } from '../../components/layout/Footer';
-import { backendProducts, mapBackendProductToUi } from "../../../data/products";
+import { getUniqueProductsUi } from "../../../data/products";
 import { isAuthenticated } from "../../utils/auth";
-import { currentUser } from "../../../data/user";
 import { currentUser as getCurrentUser } from "../../../data/user";
 
-const products = backendProducts.map(mapBackendProductToUi);
+const products = getUniqueProductsUi();
+
 const featuredProducts = products.filter(
   (product) => Number(product.discount) > 0
-)
-
+);
 
 export default function Home() {
   const isLoggedIn = isAuthenticated();
@@ -22,6 +20,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-accent">
       <Header isLoggedIn={isLoggedIn} userName={currentUser?.nome ?? ''} />
+
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <motion.section
           initial={{ opacity: 0, y: 20 }}
@@ -30,9 +29,14 @@ export default function Home() {
           className="mb-16"
         >
           <div className="mb-6">
-            <h2 className="text-3xl font-extrabold text-foreground mb-2">Ofertas Especiais</h2>
-            <p className="text-muted-foreground">Aproveite nossos produtos em destaque com descontos exclusivos</p>
+            <h2 className="text-3xl font-extrabold text-foreground mb-2">
+              Ofertas Especiais
+            </h2>
+            <p className="text-muted-foreground">
+              Aproveite nossos produtos em destaque com descontos exclusivos
+            </p>
           </div>
+
           <ProductCarousel products={featuredProducts} />
         </motion.section>
 
@@ -43,11 +47,18 @@ export default function Home() {
         >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-foreground mb-1">Todos os Produtos</h2>
-              <p className="text-sm text-muted-foreground">{products.length} produtos disponíveis</p>
+              <h2 className="text-2xl font-bold text-foreground mb-1">
+                Todos os Produtos
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                {products.length} produtos disponíveis
+              </p>
             </div>
+
             <div className="flex items-center gap-2 text-sm">
-              <span className="text-muted-foreground hidden sm:inline">Ordenar por:</span>
+              <span className="text-muted-foreground hidden sm:inline">
+                Ordenar por:
+              </span>
               <select className="px-4 py-2 border-2 border-border rounded-lg bg-background focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer hover:border-primary/50 w-full sm:w-auto">
                 <option>Relevância</option>
                 <option>Menor preço</option>
@@ -72,6 +83,7 @@ export default function Home() {
           </div>
         </motion.section>
       </main>
+
       <Footer />
     </div>
   );

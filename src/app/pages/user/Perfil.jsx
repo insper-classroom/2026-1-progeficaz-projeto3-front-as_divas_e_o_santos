@@ -1,34 +1,40 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Header } from '../../components/layout/Header';
-import { Card } from '../../components/ui/Card';
-import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
-import { User, Calendar, History } from 'lucide-react';
-import { Footer } from '../../components/layout/Footer';
-import { isAuthenticated } from "../../utils/auth";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Header } from "../../components/layout/Header";
+import { Card } from "../../components/ui/Card";
+import { Button } from "../../components/ui/Button";
+import { Input } from "../../components/ui/Input";
+import { User, Calendar, History } from "lucide-react";
 import { currentUser as getCurrentUser } from "../../../data/user";
+import {backendReservations, mapBackendReservationToUi} from "../../../data/reservas";
+import { getBackendProductById } from "../../../data/products";
+import { isAuthenticated } from "../../utils/auth";
+import { Footer } from '../../components/layout/Footer';
+import { getActiveReservationsForUserUi } from "../../../data/reservas";
 
-const upcomingReservations = [
-  {
-    id: 1,
-    productName: 'Moletom Insper Premium',
-    pickupDate: '2026-04-25',
-    image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=100&h=100&fit=crop'
-  },
-  {
-    id: 2,
-    productName: 'Camiseta Insper Básica',
-    pickupDate: '2026-04-28',
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100&h=100&fit=crop'
-  }
-];
 
 export default function Perfil() {
-  const navigate = useNavigate();
   const currentUser = getCurrentUser();
+
+  const upcomingReservations = currentUser
+    ? backendReservations
+        .filter(
+          (reservation) =>
+            reservation.usuario_id === currentUser.id &&
+            reservation.status === "ativa"
+        )
+        .slice(0, 2)
+        .map((reservation) =>
+          mapBackendReservationToUi(
+            reservation,
+            getBackendProductById(reservation.produto_id)
+          )
+        )
+    : [];
+
+  const navigate = useNavigate();
   const isLoggedIn = isAuthenticated();
-  const [email, setEmail] = useState(currentUser?.email ?? '');
+  const [email, setEmail] = useState(currentUser?.email ?? "");
   const [newPassword, setNewPassword] = useState('');
   const [isEditing, setIsEditing] = useState(false);
 
