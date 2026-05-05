@@ -5,7 +5,7 @@ import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
 import { PromotionBadge } from "../../components/product/PromotionBadge";
-import { ArrowLeft, Minus, Plus, Tag } from "lucide-react";
+import { ArrowLeft, Minus, Plus } from "lucide-react";
 import { Footer } from "../../components/layout/Footer";
 import { isAuthenticated } from "../../utils/auth";
 import { currentUser as getCurrentUser } from "../../../data/user";
@@ -15,12 +15,20 @@ import {
   getVariantColors,
   getClosestVariant,
 } from "../../../data/products";
+import { createReservation } from "../../../data/reservas";
 
 const formatCurrency = (value) =>
   new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
   }).format(Number(value || 0));
+
+const getLocalDateInputValue = (date = new Date()) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
 export default function ProductDetail() {
   const navigate = useNavigate();
@@ -37,6 +45,8 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
 
   useEffect(() => {
     if (!variants.length) return;
@@ -94,14 +104,40 @@ export default function ProductDetail() {
   };
 
   const handleReserve = () => {
+    if (!currentUser) {
+      alert("Você precisa estar logado para agendar.");
+      return;
+    }
+
     if (!currentVariant) return;
+
+    if (!selectedDate || !selectedTime) {
+      alert("Selecione o dia e o horário do agendamento.");
+      return;
+    }
+
+    const scheduledAt = new Date(`${selectedDate}T${selectedTime}:00`);
+
+    if (Number.isNaN(scheduledAt.getTime())) {
+      alert("Selecione um dia e horário válidos.");
+      return;
+    }
+
+    createReservation({
+      userId: currentUser.id,
+      productId: currentVariant._id,
+      quantity,
+      scheduledAt: scheduledAt.toISOString(),
+    });
 
     alert(
       `Produto reservado com sucesso!\n` +
         `Produto: ${currentVariant.nome}\n` +
         `Quantidade: ${quantity}\n` +
         `Tamanho: ${currentVariant.tamanho}\n` +
-        `Cor: ${currentVariant.cor}`
+        `Cor: ${currentVariant.cor}\n` +
+        `Dia: ${selectedDate}\n` +
+        `Horário: ${selectedTime}`
     );
 
     navigate("/perfil");
@@ -267,7 +303,40 @@ export default function ProductDetail() {
               </div>
             </Card>
 
-            <Button className="w-full" size="lg" onClick={handleReserve}>
+            <Card className="p-5">
+              <div className="mb-4">
+                <h2 className="text-lg font-semibold text-foreground mb-1">
+                  Agendamento
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Selecione o dia e o horário para retirar o produto.
+                </p>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                <Input
+                  label="Dia do agendamento"
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  min={getLocalDateInputValue()}
+                />
+
+                <Input
+                  label="Horário do agendamento"
+                  type="time"
+                  value={selectedTime}
+                  onChange={(e) => setSelectedTime(e.target.value)}
+                />
+              </div>
+            </Card>
+
+            <Button
+              className="w-full"
+              size="lg"
+              onClick={handleReserve}
+              disabled={!selectedDate || !selectedTime}
+            >
               Reservar produto
             </Button>
           </div>

@@ -8,23 +8,18 @@ import { Footer } from "../../components/layout/Footer";
 import { isAuthenticated } from "../../utils/auth";
 import { UserCancellationModal } from "../../components/ui/UserCancellationModal";
 import { currentUser as getCurrentUser } from "../../../data/user";
-import {backendReservations, mapBackendReservationToUi} from "../../../data/reservas";
-import { getBackendProductById } from "../../../data/products";
+import {
+  cancelReservation,
+  getReservationsForUserUi,
+} from "../../../data/reservas";
 
 export default function Historico() {
   const currentUser = getCurrentUser();
 
   const initialReservations = currentUser
-    ? backendReservations
-        .filter((reservation) => reservation.usuario_id === currentUser.id)
-        .map((reservation) =>
-          mapBackendReservationToUi(
-            reservation,
-            getBackendProductById(reservation.produto_id)
-          )
-        )
+    ? getReservationsForUserUi(currentUser.id)
     : [];
-    
+
   const navigate = useNavigate();
   const [reservations, setReservations] = useState(initialReservations);
   const [selectedReservation, setSelectedReservation] = useState(null);
@@ -36,6 +31,7 @@ export default function Historico() {
   };
 
   const handleConfirmCancel = (reservationToCancel) => {
+    cancelReservation(reservationToCancel.id);
     setReservations((current) =>
       current.filter((item) => item.id !== reservationToCancel.id)
     );
@@ -88,23 +84,27 @@ export default function Historico() {
                     {reservation.productName}
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    Data de retirada:{" "}
-                    {new Date(reservation.pickupDate).toLocaleDateString("pt-BR")}
+                    Agendamento: {reservation.reservationDateLabel} às {reservation.reservationTimeLabel}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Retirada: {reservation.pickupDateLabel} às {reservation.pickupTimeLabel}
                   </p>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <span
                     className={`px-3 py-1.5 rounded-full text-sm font-medium ${
-                      reservation.status === "Agendado"
+                      reservation.status === "ativa"
                         ? "bg-primary/10 text-primary border border-primary/20"
-                        : "bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800"
+                        : reservation.status === "retirada"
+                          ? "bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800"
+                          : "bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800"
                     }`}
                   >
-                    {reservation.status}
+                    {reservation.statusLabel}
                   </span>
 
-                  {reservation.status === "Agendado" && (
+                  {reservation.status === "ativa" && (
                     <Button
                       variant="outline"
                       size="sm"

@@ -8,7 +8,7 @@ import { Package, AlertTriangle, Calendar, LogOut, ShoppingBag, TrendingUp, Info
 import { Footer } from '../../components/layout/Footer';
 import { HeaderAdmin } from '../../components/layout/HeaderAdmin';
 import { useMemo } from "react";
-import { backendReservations, mapBackendReservationToUi } from "../../../data/reservas";
+import { getAllReservations } from "../../../data/reservas";
 import { getBackendUserById } from "../../../data/user";
 import { getBackendProductById } from "../../../data/products";
 import { getCurrentUser } from "../../../data/user";
@@ -18,7 +18,7 @@ export default function Dashboard() {
   
   const currentUser = getCurrentUser();
   const todayReservations = useMemo(() => {
-    return backendReservations.map((reservation) => {
+    return getAllReservations().map((reservation) => {
       const user = getBackendUserById(reservation.usuario_id);
       const product = getBackendProductById(reservation.produto_id);
 
@@ -67,7 +67,7 @@ export default function Dashboard() {
               </div>
             </div>
             <p className="text-3xl font-bold text-foreground mb-2">
-              {backendReservations.length}
+              {getAllReservations().length}
             </p>
             <p className="text-sm text-muted-foreground">Produtos Vendidos Hoje</p>
             <div className="mt-3 pt-3 border-t border-border">

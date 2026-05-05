@@ -6,48 +6,33 @@ import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
 import { User, Calendar, History } from "lucide-react";
 import { currentUser as getCurrentUser } from "../../../data/user";
-import {backendReservations, mapBackendReservationToUi} from "../../../data/reservas";
-import { getBackendProductById } from "../../../data/products";
 import { isAuthenticated } from "../../utils/auth";
-import { Footer } from '../../components/layout/Footer';
+import { Footer } from "../../components/layout/Footer";
 import { getActiveReservationsForUserUi } from "../../../data/reservas";
-
 
 export default function Perfil() {
   const currentUser = getCurrentUser();
 
   const upcomingReservations = currentUser
-    ? backendReservations
-        .filter(
-          (reservation) =>
-            reservation.usuario_id === currentUser.id &&
-            reservation.status === "ativa"
-        )
-        .slice(0, 2)
-        .map((reservation) =>
-          mapBackendReservationToUi(
-            reservation,
-            getBackendProductById(reservation.produto_id)
-          )
-        )
+    ? getActiveReservationsForUserUi(currentUser.id).slice(0, 2)
     : [];
 
   const navigate = useNavigate();
   const isLoggedIn = isAuthenticated();
   const [email, setEmail] = useState(currentUser?.email ?? "");
-  const [newPassword, setNewPassword] = useState('');
+  const [newPassword, setNewPassword] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
   const handleSave = (e) => {
     e.preventDefault();
-    alert('Informações atualizadas com sucesso!');
+    alert("Informações atualizadas com sucesso!");
     setIsEditing(false);
-    setNewPassword('');
+    setNewPassword("");
   };
 
   return (
     <div className="min-h-screen bg-background">
-      <Header isLoggedIn={isLoggedIn} userName={currentUser?.nome ?? ''} />
+      <Header isLoggedIn={isLoggedIn} userName={currentUser?.nome ?? ""} />
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
@@ -57,7 +42,7 @@ export default function Perfil() {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-foreground">
-                Olá, {currentUser?.nome ?? ''}!
+                Olá, {currentUser?.nome ?? ""}!
               </h1>
               <p className="text-muted-foreground">Gerencie seu perfil e reservas</p>
             </div>
@@ -101,8 +86,8 @@ export default function Perfil() {
                     className="w-full"
                     onClick={() => {
                       setIsEditing(false);
-                      setEmail(currentUser?.email ?? '');
-                      setNewPassword('');
+                      setEmail(currentUser?.email ?? "");
+                      setNewPassword("");
                     }}
                   >
                     Cancelar
@@ -147,7 +132,7 @@ export default function Perfil() {
                     <div className="flex-1">
                       <p className="font-semibold text-foreground">{reservation.productName}</p>
                       <p className="text-sm text-muted-foreground">
-                        Retirada: {new Date(reservation.pickupDate).toLocaleDateString('pt-BR')}
+                        Retirada: {reservation.pickupDateLabel} às {reservation.pickupTimeLabel}
                       </p>
                     </div>
                   </div>

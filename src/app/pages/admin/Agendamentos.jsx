@@ -7,7 +7,7 @@ import { LogOut, ShoppingBag, X, MessageSquare, Edit2, Save } from "lucide-react
 import { Footer } from '../../components/layout/Footer';
 import { HeaderAdmin } from '../../components/layout/HeaderAdmin';
 import { CancellationModal } from "../../components/admin/CancellationModal";
-import { backendReservations } from "../../../data/reservas";
+import { cancelReservation, getAllReservations } from "../../../data/reservas";
 import { getBackendUserById } from "../../../data/user";
 import { getBackendProductById } from "../../../data/products";
 
@@ -15,7 +15,7 @@ import { getBackendProductById } from "../../../data/products";
 export default function Agendamentos() {
 
   const [reservationList, setReservationList] = useState(
-    backendReservations.map((reservation) => {
+    getAllReservations().map((reservation) => {
       const user = getBackendUserById(reservation.usuario_id);
       const product = getBackendProductById(reservation.produto_id);
 
@@ -45,6 +45,7 @@ const handleOpenCancelModal = (reservation) => {
 };
 
 const handleConfirmCancel = (reservation) => {
+  cancelReservation(reservation.id);
   setReservationList((currentList) =>
     currentList.filter((res) => res.id !== reservation.id)
   );

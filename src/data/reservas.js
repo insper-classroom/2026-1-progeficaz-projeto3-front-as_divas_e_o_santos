@@ -1,5 +1,7 @@
 import { getBackendProductById, mapBackendProductToUi } from "./products";
 
+const RESERVATIONS_STORAGE_KEY = "insper_reservas";
+
 export const backendReservations = [
   {
     _id: "000000000000000000000101",
@@ -33,8 +35,92 @@ export const backendReservations = [
   },
 ];
 
+const cloneReservations = (reservations) =>
+  reservations.map((reservation) => ({ ...reservation }));
+
+const getStorage = () => {
+  if (typeof window === "undefined" || !window.localStorage) {
+    return null;
+  }
+
+  return window.localStorage;
+};
+
+const getInitialReservations = () => cloneReservations(backendReservations);
+
+const readReservationsFromStorage = () => {
+  const storage = getStorage();
+
+  if (!storage) {
+    return getInitialReservations();
+  }
+
+  const raw = storage.getItem(RESERVATIONS_STORAGE_KEY);
+
+  if (!raw) {
+    const initialReservations = getInitialReservations();
+    storage.setItem(RESERVATIONS_STORAGE_KEY, JSON.stringify(initialReservations));
+    return initialReservations;
+  }
+
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : getInitialReservations();
+  } catch {
+    const initialReservations = getInitialReservations();
+    storage.setItem(RESERVATIONS_STORAGE_KEY, JSON.stringify(initialReservations));
+    return initialReservations;
+  }
+};
+
+const writeReservationsToStorage = (reservations) => {
+  const storage = getStorage();
+  if (!storage) return;
+
+  storage.setItem(RESERVATIONS_STORAGE_KEY, JSON.stringify(reservations));
+};
+
+export const getAllReservations = () => readReservationsFromStorage();
+
+export const saveReservation = (reservation) => {
+  const currentReservations = readReservationsFromStorage();
+  const nextReservations = [...currentReservations, reservation];
+
+  writeReservationsToStorage(nextReservations);
+  return reservation;
+};
+
+export const cancelReservation = (reservationId) => {
+  const currentReservations = readReservationsFromStorage();
+  const nextReservations = currentReservations.filter(
+    (reservation) => reservation._id !== reservationId
+  );
+
+  writeReservationsToStorage(nextReservations);
+  return nextReservations;
+};
+
+const formatDateLabel = (value) => {
+  if (!value) return "";
+
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "" : date.toLocaleDateString("pt-BR");
+};
+
+const formatTimeLabel = (value) => {
+  if (!value) return "";
+
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? ""
+    : date.toLocaleTimeString("pt-BR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+};
+
 export const getBackendReservationsByUserId = (usuarioId) => {
-  return backendReservations.filter(
+  return getAllReservations().filter(
     (reservation) => reservation.usuario_id === usuarioId
   );
 };
@@ -55,7 +141,11 @@ export const mapBackendReservationToUi = (reservation) => {
     productId: reservation.produto_id,
     quantity: reservation.quantidade,
     reservationDate: reservation.data_reserva,
+    reservationDateLabel: formatDateLabel(reservation.data_reserva),
+    reservationTimeLabel: formatTimeLabel(reservation.data_reserva),
     pickupDate: reservation.data_retirada,
+    pickupDateLabel: formatDateLabel(reservation.data_retirada),
+    pickupTimeLabel: formatTimeLabel(reservation.data_retirada),
     status: reservation.status,
     notified: reservation.notificado,
     statusLabel:
@@ -77,4 +167,20 @@ export const getActiveReservationsForUserUi = (usuarioId) => {
   return getBackendActiveReservationsByUserId(usuarioId).map(
     mapBackendReservationToUi
   );
+};
+
+export const createReservation = ({ userId, productId, quantity, scheduledAt }) => {
+  const reservation = {
+    _id: `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`,
+    usuario_id: userId,
+    produto_id: productId,
+    quantidade: quantity,
+    data_reserva: scheduledAt,
+    data_retirada: scheduledAt,
+    status: "ativa",
+    notificado: false,
+  };
+
+  saveReservation(reservation);
+  return reservation;
 };
