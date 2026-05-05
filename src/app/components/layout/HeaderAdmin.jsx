@@ -4,6 +4,7 @@ import { Button } from '../ui/Button';
 import { ThemeToggle } from '../ui/ThemeToggle';
 import logo from "../../../assets/logo-insper.png";
 import logoTextLight from "../../../assets/loja-insper.png";
+import { signOut } from "../../utils/auth";
 
 export const HeaderAdmin = ({ userName }) => {
   const navigate = useNavigate();
@@ -55,7 +56,10 @@ export const HeaderAdmin = ({ userName }) => {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => navigate('/login')}
+              onClick={() => {
+                  signOut();
+                  navigate("/login");
+                }}
               className="gap-1.5"
             >
               <LogOut className="w-4 h-4" />

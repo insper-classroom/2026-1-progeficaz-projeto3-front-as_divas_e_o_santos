@@ -7,68 +7,34 @@ import { LogOut, ShoppingBag, X, MessageSquare, Edit2, Save } from "lucide-react
 import { Footer } from '../../components/layout/Footer';
 import { HeaderAdmin } from '../../components/layout/HeaderAdmin';
 import { CancellationModal } from "../../components/admin/CancellationModal";
+import { backendReservations } from "../../../data/reservas";
+import { getBackendUserById } from "../../../data/user";
+import { getBackendProductById } from "../../../data/products";
 
-
-const reservations = [
-  {
-    id: 1,
-    userName: "João Silva",
-    product: "Moletom Insper Premium",
-    pickupDate: "27/04/2026",
-    pickupTime: "09:00",
-    email: "joao.silva@insper.edu.br",
-    phone: "(11) 98765-4321",
-  },
-  {
-    id: 2,
-    userName: "Maria Santos",
-    product: "Boné Insper",
-    pickupDate: "27/04/2026",
-    pickupTime: "10:30",
-    email: "maria.santos@insper.edu.br",
-    phone: "(11) 97654-3210",
-  },
-  {
-    id: 3,
-    userName: "Pedro Oliveira",
-    product: "Mochila Insper",
-    pickupDate: "27/04/2026",
-    pickupTime: "14:00",
-    email: "pedro.oliveira@insper.edu.br",
-    phone: "(11) 96543-2109",
-  },
-  {
-    id: 4,
-    userName: "Ana Costa",
-    product: "Kit Insper Completo",
-    pickupDate: "28/04/2026",
-    pickupTime: "11:00",
-    email: "ana.costa@insper.edu.br",
-    phone: "(11) 95432-1098",
-  },
-  {
-    id: 5,
-    userName: "Lucas Ferreira",
-    product: "Camiseta Insper Básica",
-    pickupDate: "28/04/2026",
-    pickupTime: "15:30",
-    email: "lucas.ferreira@insper.edu.br",
-    phone: "(11) 94321-0987",
-  },
-  {
-    id: 6,
-    userName: "Fernanda Lima",
-    product: "Garrafa Térmica",
-    pickupDate: "29/04/2026",
-    pickupTime: "09:30",
-    email: "fernanda.lima@insper.edu.br",
-    phone: "(11) 93210-9876",
-  },
-];
 
 export default function Agendamentos() {
+
+  const [reservationList, setReservationList] = useState(
+    backendReservations.map((reservation) => {
+      const user = getBackendUserById(reservation.usuario_id);
+      const product = getBackendProductById(reservation.produto_id);
+
+      return {
+        id: reservation._id,
+        userName: user?.nome ?? "Usuário",
+        product: product?.nome ?? "Produto",
+        pickupDate: new Date(reservation.data_reserva).toLocaleDateString("pt-BR"),
+        pickupTime: new Date(reservation.data_reserva).toLocaleTimeString("pt-BR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        email: user?.email ?? "",
+        phone: user?.phone ?? "",
+      };
+    })
+  );
+
   const navigate = useNavigate();
-  const [reservationList, setReservationList] = useState(reservations);
   const [isEditingSchedule, setIsEditingSchedule] = useState(false);
   const [selectedReservation, setSelectedReservation] = useState(null);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);

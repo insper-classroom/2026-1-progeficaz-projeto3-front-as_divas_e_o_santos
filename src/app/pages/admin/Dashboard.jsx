@@ -7,47 +7,36 @@ import { ReservationModal } from '../../components/admin/ReservationModal';
 import { Package, AlertTriangle, Calendar, LogOut, ShoppingBag, TrendingUp, Info } from 'lucide-react';
 import { Footer } from '../../components/layout/Footer';
 import { HeaderAdmin } from '../../components/layout/HeaderAdmin';
+import { useMemo } from "react";
+import { backendReservations, mapBackendReservationToUi } from "../../../data/reservas";
+import { getBackendUserById } from "../../../data/user";
+import { getBackendProductById } from "../../../data/products";
+import { getCurrentUser } from "../../../data/user";
 
-const todayReservations = [
-  {
-    id: 1,
-    client: 'João Silva',
-    email: 'joao.silva@insper.edu.br',
-    phone: '(11) 98765-4321',
-    items: ['Moletom Insper Premium', 'Camiseta Básica'],
-    pickupTime: '09:00',
-    pickupDate: '27/04/2026'
-  },
-  {
-    id: 2,
-    client: 'Maria Santos',
-    email: 'maria.santos@insper.edu.br',
-    phone: '(11) 97654-3210',
-    items: ['Boné Insper'],
-    pickupTime: '10:30',
-    pickupDate: '27/04/2026'
-  },
-  {
-    id: 3,
-    client: 'Pedro Oliveira',
-    email: 'pedro.oliveira@insper.edu.br',
-    phone: '(11) 96543-2109',
-    items: ['Mochila Insper', 'Garrafa Térmica', 'Caneca Insper'],
-    pickupTime: '14:00',
-    pickupDate: '27/04/2026'
-  },
-  {
-    id: 4,
-    client: 'Ana Costa',
-    email: 'ana.costa@insper.edu.br',
-    phone: '(11) 95432-1098',
-    items: ['Kit Insper Completo'],
-    pickupTime: '16:30',
-    pickupDate: '27/04/2026'
-  }
-];
 
 export default function Dashboard() {
+  
+  const currentUser = getCurrentUser();
+  const todayReservations = useMemo(() => {
+    return backendReservations.map((reservation) => {
+      const user = getBackendUserById(reservation.usuario_id);
+      const product = getBackendProductById(reservation.produto_id);
+
+      return {
+        id: reservation._id,
+        client: user?.nome ?? "Usuário",
+        email: user?.email ?? "",
+        phone: user?.phone ?? "",
+        items: [product?.nome ?? "Produto"],
+        pickupTime: new Date(reservation.data_reserva).toLocaleTimeString("pt-BR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        pickupDate: new Date(reservation.data_reserva).toLocaleDateString("pt-BR"),
+      };
+    });
+  }, []);
+
   const navigate = useNavigate();
   const [selectedReservation, setSelectedReservation] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -59,7 +48,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-accent">
-      <HeaderAdmin userName="Admin" />
+      <HeaderAdmin userName={currentUser?.nome ?? "Admin"} />
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
@@ -71,14 +60,15 @@ export default function Dashboard() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
 
-          {/* VERDE → #3ACC9F */}
           <Card className="p-6 hover:shadow-lg transition-all duration-300 group" hover>
             <div className="flex items-center justify-between mb-4">
               <div className="w-14 h-14 bg-[#3ACC9F] rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <TrendingUp className="w-7 h-7 text-white" />
               </div>
             </div>
-            <p className="text-3xl font-bold text-foreground mb-2">32</p>
+            <p className="text-3xl font-bold text-foreground mb-2">
+              {backendReservations.length}
+            </p>
             <p className="text-sm text-muted-foreground">Produtos Vendidos Hoje</p>
             <div className="mt-3 pt-3 border-t border-border">
               <p className="text-xs font-medium text-[#3ACC9F]">
@@ -87,7 +77,6 @@ export default function Dashboard() {
             </div>
           </Card>
 
-          {/* AMARELO → agora vermelho #d10204 */}
           <Card className="p-6 hover:shadow-lg transition-all duration-300 group border-[#d10204]" hover>
             <div className="flex items-center justify-between mb-4">
               <div className="w-14 h-14 bg-[#d10204] rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
@@ -103,7 +92,6 @@ export default function Dashboard() {
             </div>
           </Card>
 
-          {/* AZUL → agora amarelo #FFE066 */}
           <Card className="p-6 hover:shadow-lg transition-all duration-300 group border-[#FFE066]" hover>
             <div className="flex items-center justify-between mb-4">
               <div className="w-14 h-14 bg-[#FFE066] rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">

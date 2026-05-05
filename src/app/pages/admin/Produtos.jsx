@@ -4,7 +4,7 @@ import { Button } from "../../components/ui/Button";
 import { Footer } from "../../components/layout/Footer";
 import { HeaderAdmin } from "../../components/layout/HeaderAdmin";
 import { Package, Plus, Edit } from "lucide-react";
-import { backendProducts } from "../../../data/products";
+import { getUniqueBackendProductsByName } from "../../../data/products";
 
 const formatCurrency = (value) =>
   new Intl.NumberFormat("pt-BR", {
@@ -60,7 +60,7 @@ export default function Produtos() {
             </thead>
 
             <tbody>
-              {backendProducts.map((product) => (
+              {getUniqueBackendProductsByName().map((product) => (
                 <tr
                   key={product._id}
                   className="border-b border-border hover:bg-accent transition-colors"
