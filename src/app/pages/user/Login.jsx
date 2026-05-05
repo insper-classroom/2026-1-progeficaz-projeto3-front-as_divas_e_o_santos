@@ -18,7 +18,7 @@ export default function Login() {
     <div className="min-h-screen flex">
       <div className="hidden lg:flex lg:w-[65%] relative">
         <img
-          src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&h=1080&fit=crop"
+          src="/public/fachada-lojinha.jpeg"
           alt="Store"
           className="w-full h-full object-cover"
         />

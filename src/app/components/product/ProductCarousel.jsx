@@ -1,26 +1,57 @@
-import { useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ReactSlick from "react-slick";
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button } from '../ui/Button';
-import { Card } from '../ui/Card';
-import { PromotionBadge } from './PromotionBadge';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "../ui/Button";
+import { Card } from "../ui/Card";
+import { PromotionBadge } from "./PromotionBadge";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const Slider = ReactSlick.default ?? ReactSlick;
 
-const carouselThemes = [
-  { bg: '#3ACC9F', fg: '#0E171D' },
-  { bg: '#FFE066', fg: '#0E171D' },
-  { bg: '#0E171D', fg: '#FFFFFF' },
+const lightCarouselThemes = [
+  { bg: "#3ACC9F", fg: "#0E171D" },
+  { bg: "#FFE066", fg: "#0E171D" },
+  { bg: "#0E171D", fg: "#FFFFFF" },
 ];
 
-const getSlideTheme = (index) => carouselThemes[index % carouselThemes.length];
+const darkCarouselThemes = [
+  { bg: "#0E171D", fg: "#EDEDED" },
+  { bg: "#0c180c", fg: "#EDEDED" },
+  { bg: "#1d130e", fg: "#FFFFFF" },
+];
 
 export const ProductCarousel = ({ products }) => {
   const navigate = useNavigate();
   const sliderRef = useRef(null);
+
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof document === "undefined") return false;
+    return document.documentElement.classList.contains("dark");
+  });
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    const root = document.documentElement;
+
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(root.classList.contains("dark"));
+    });
+
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const carouselThemes = isDarkMode ? darkCarouselThemes : lightCarouselThemes;
+
+  const getSlideTheme = (index) =>
+    carouselThemes[index % carouselThemes.length];
 
   const settings = {
     dots: true,
@@ -33,7 +64,7 @@ export const ProductCarousel = ({ products }) => {
     arrows: false,
     appendDots: (dots) => (
       <div className="absolute bottom-6">
-        <ul className="flex gap-2"> {dots} </ul>
+        <ul className="flex gap-2">{dots}</ul>
       </div>
     ),
     customPaging: () => (
@@ -46,7 +77,7 @@ export const ProductCarousel = ({ products }) => {
       <Slider ref={sliderRef} {...settings}>
         {products.map((product, index) => {
           const theme = getSlideTheme(index);
-          const descriptionColor = theme.bg === '#0E171D' ? '#FFFFFF' : '#0E171D';
+          const descriptionColor = theme.fg;
 
           return (
             <div key={product.id}>
@@ -55,14 +86,16 @@ export const ProductCarousel = ({ products }) => {
                 style={{
                   backgroundColor: theme.bg,
                   color: theme.fg,
-                  '--foreground': theme.fg,
+                  "--foreground": theme.fg,
                 }}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
                 <div className="grid md:grid-cols-2 gap-6 p-6 md:p-8 relative z-10">
                   <div className="flex flex-col justify-center order-2 md:order-1">
                     <div className="flex items-center gap-3 mb-3">
-                      <span className="text-primary font-semibold text-sm md:text-base">DESTAQUE</span>
+                      <span className="text-primary font-semibold text-sm md:text-base">
+                        DESTAQUE
+                      </span>
                       {product.discount && product.discount > 0 && (
                         <PromotionBadge discount={product.discount} size="md" />
                       )}
@@ -80,7 +113,8 @@ export const ProductCarousel = ({ products }) => {
                     </p>
 
                     <div className="flex items-baseline gap-2 md:gap-3 mb-4 md:mb-6">
-                      {product.originalPrice && product.originalPrice > product.price ? (
+                      {product.originalPrice &&
+                      product.originalPrice > product.price ? (
                         <>
                           <span className="text-base md:text-lg text-muted-foreground line-through">
                             R$ {product.originalPrice.toFixed(2)}

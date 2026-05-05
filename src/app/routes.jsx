@@ -12,6 +12,7 @@ import AdminLogin from './pages/admin/AdminLogin';
 import Dashboard from './pages/admin/Dashboard';
 import Agendamentos from './pages/admin/Agendamentos';
 import Produtos from './pages/admin/Produtos';
+import EditarProduto from './pages/admin/EditarProduto';
 
 export const router = createBrowserRouter([
   {
@@ -61,5 +62,9 @@ export const router = createBrowserRouter([
   {
     path: '/admin/produtos',
     element: <Produtos />,
+  },
+  {
+    path: '/admin/produtos/editar/:id',
+    element: <EditarProduto />,
   },
 ]);

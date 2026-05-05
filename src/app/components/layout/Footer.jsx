@@ -10,7 +10,7 @@ const pageLinks = [
 ];
 
   return (
-    <footer className="bg-[#3A3A41] text-white mt-auto">
+    <footer className="bg-[#3A3A41] dark:bg-[#121212] text-white mt-auto">
       <div className="max-w-6xl mx-auto px-6 py-12">
         
         <div className="grid md:grid-cols-3 gap-10">
