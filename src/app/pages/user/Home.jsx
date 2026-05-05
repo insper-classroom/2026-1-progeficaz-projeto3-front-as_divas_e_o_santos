@@ -1,25 +1,57 @@
-import { motion } from 'framer-motion';
-import { Header } from '../../components/layout/Header';
-import { ProductCarousel } from '../../components/product/ProductCarousel';
-import { ProductCard } from '../../components/product/ProductCard';
-import { Footer } from '../../components/layout/Footer';
-import { getUniqueProductsUi } from "../../../data/products";
+import { useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
+import { Header } from "../../components/layout/Header";
+import { ProductCarousel } from "../../components/product/ProductCarousel";
+import { ProductCard } from "../../components/product/ProductCard";
+import { Footer } from "../../components/layout/Footer";
+import api from "../../utils/api";
+import { mapBackendProductToUi } from "../../../data/products";
 import { isAuthenticated } from "../../utils/auth";
 import { currentUser as getCurrentUser } from "../../../data/user";
 
-const products = getUniqueProductsUi();
-
-const featuredProducts = products.filter(
-  (product) => Number(product.discount) > 0
-);
-
 export default function Home() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await api.get("/");
+
+        const backendProducts = Array.isArray(response.data)
+          ? response.data
+          : [];
+
+        const formattedProducts = backendProducts.map(mapBackendProductToUi);
+
+        setProducts(formattedProducts);
+      } catch (err) {
+        console.error("Erro ao buscar produtos:", err);
+        setError("Não foi possível carregar os produtos.");
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const featuredProducts = useMemo(
+    () => products.filter((product) => Number(product.discount) > 0),
+    [products]
+  );
+
   const isLoggedIn = isAuthenticated();
   const currentUser = getCurrentUser();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-accent">
-      <Header isLoggedIn={isLoggedIn} userName={currentUser?.nome ?? ''} />
+      <Header isLoggedIn={isLoggedIn} userName={currentUser?.nome ?? ""} />
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <motion.section
@@ -37,7 +69,21 @@ export default function Home() {
             </p>
           </div>
 
-          <ProductCarousel products={featuredProducts} />
+          {loading ? (
+            <div className="rounded-2xl border border-border bg-background/60 p-6 text-muted-foreground">
+              Carregando produtos...
+            </div>
+          ) : error ? (
+            <div className="rounded-2xl border border-border bg-background/60 p-6 text-muted-foreground">
+              {error}
+            </div>
+          ) : featuredProducts.length > 0 ? (
+            <ProductCarousel products={featuredProducts} />
+          ) : (
+            <div className="rounded-2xl border border-border bg-background/60 p-6 text-muted-foreground">
+              Nenhuma oferta em destaque no momento.
+            </div>
+          )}
         </motion.section>
 
         <motion.section
@@ -51,7 +97,7 @@ export default function Home() {
                 Todos os Produtos
               </h2>
               <p className="text-sm text-muted-foreground">
-                {products.length} produtos disponíveis
+                {loading ? "Carregando..." : `${products.length} produtos disponíveis`}
               </p>
             </div>
 
@@ -69,18 +115,24 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map((product, index) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
-              >
-                <ProductCard {...product} />
-              </motion.div>
-            ))}
-          </div>
+          {!loading && !error && products.length === 0 ? (
+            <div className="rounded-2xl border border-border bg-background/60 p-6 text-muted-foreground">
+              Nenhum produto encontrado.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {products.map((product, index) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
+                >
+                  <ProductCard {...product} />
+                </motion.div>
+              ))}
+            </div>
+          )}
         </motion.section>
       </main>
 
