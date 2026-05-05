@@ -28,7 +28,10 @@ export default function Produtos() {
             </p>
           </div>
 
-          <Button className="gap-2">
+          <Button
+            className="gap-2"
+            onClick={() => navigate("/admin/produtos/cadastrar")}
+          >
             <Plus className="w-4 h-4" />
             Novo Produto
           </Button>

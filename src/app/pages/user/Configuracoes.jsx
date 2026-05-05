@@ -27,7 +27,7 @@ export default function Configuracoes() {
             <Settings className="w-8 h-8 text-primary" />
             <h1 className="text-3xl font-bold text-foreground">Configurações</h1>
           </div>
-          <p className="text-muted-foreground">Personalize sua experiência na Insper Store</p>
+          <p className="text-muted-foreground">Personalize sua experiência na Loja Insper</p>
         </div>
 
         <div className="space-y-6">

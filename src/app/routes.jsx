@@ -13,6 +13,8 @@ import Dashboard from './pages/admin/Dashboard';
 import Agendamentos from './pages/admin/Agendamentos';
 import Produtos from './pages/admin/Produtos';
 import EditarProduto from './pages/admin/EditarProduto';
+import CadastrarProduto from "./pages/admin/CadastrarProduto";
+import RecuperarSenha from "./pages/user/RecuperarSenha";
 
 export const router = createBrowserRouter([
   {
@@ -66,5 +68,13 @@ export const router = createBrowserRouter([
   {
     path: '/admin/produtos/editar/:id',
     element: <EditarProduto />,
+  },
+  {
+    path: "/admin/produtos/cadastrar",
+    element: <CadastrarProduto />,
+  },
+  {
+    path: "/recuperar",
+    element: <RecuperarSenha />,
   },
 ]);

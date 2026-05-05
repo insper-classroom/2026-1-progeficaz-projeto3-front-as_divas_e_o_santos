@@ -30,7 +30,7 @@ export default function Sugestao() {
             Envie sua sugestão
           </h1>
           <p className="text-muted-foreground">
-            Sua opinião é muito importante para melhorarmos a Insper Store
+            Sua opinião é muito importante para melhorarmos a Loja Insper
           </p>
         </div>
 

@@ -26,7 +26,7 @@ export default function AdminLogin() {
         <div className="absolute bottom-12 left-12 text-white z-10">
           <h2 className="text-4xl font-bold mb-4">Painel Administrativo</h2>
           <p className="text-lg text-white/90 max-w-md">
-            Gerencie produtos, estoque, reservas e usuários da Insper Store
+            Gerencie produtos, estoque, reservas e usuários da Loja Insper
           </p>
         </div>
       </div>
