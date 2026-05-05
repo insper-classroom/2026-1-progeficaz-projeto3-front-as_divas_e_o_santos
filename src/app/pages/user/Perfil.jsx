@@ -5,6 +5,7 @@ import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { User, Calendar, History } from 'lucide-react';
+import { Footer } from '../../components/layout/Footer';
 
 const upcomingReservations = [
   {
@@ -148,6 +149,7 @@ export default function Perfil() {
           </Card>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
