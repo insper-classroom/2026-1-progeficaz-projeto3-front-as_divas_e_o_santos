@@ -9,6 +9,7 @@ export const backendUsers = [
     codigo_expira: "2026-04-28T20:00:00Z",
     notificacoes_push: false,
     promocoes_email: false,
+    isAdmin: false,
   },
   {
     _id: "000000000000000000000002",
@@ -19,6 +20,7 @@ export const backendUsers = [
     codigo_expira: null,
     notificacoes_push: true,
     promocoes_email: true,
+    isAdmin: true,
   },
 ];
 
@@ -53,7 +55,7 @@ export const getCurrentBackendUser = () => {
   return getBackendUserById(currentUserId);
 };
 
-export const currentUser = () => {
+export const getCurrentUser = () => {
   const user = getCurrentBackendUser();
   if (!user) return null;
 
@@ -63,5 +65,12 @@ export const currentUser = () => {
     email: user.email,
     notificacoes_push: user.notificacoes_push,
     promocoes_email: user.promocoes_email,
+    isAdmin: user.isAdmin,
   };
+};
+
+export const currentUser = getCurrentUser;
+
+export const isCurrentUserAdmin = () => {
+  return Boolean(getCurrentBackendUser()?.isAdmin);
 };

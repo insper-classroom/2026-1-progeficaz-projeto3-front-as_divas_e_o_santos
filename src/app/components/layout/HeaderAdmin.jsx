@@ -55,7 +55,7 @@ export const HeaderAdmin = ({ userName }) => {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => navigate('/admin/login')}
+              onClick={() => navigate('/login')}
               className="gap-1.5"
             >
               <LogOut className="w-4 h-4" />

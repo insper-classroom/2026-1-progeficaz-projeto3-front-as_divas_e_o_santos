@@ -1,21 +1,21 @@
-const STORAGE_KEY = "insper_user_logged_id";
+import {
+  clearCurrentUserId,
+  getCurrentBackendUser,
+  setCurrentUserId,
+} from "../../data/user";
 
 export const signIn = (userId) => {
-  if (!userId) {
-    throw new Error("signIn precisa receber o id do usuário");
-  }
-
-  localStorage.setItem(STORAGE_KEY, userId);
+  setCurrentUserId(userId);
 };
 
 export const signOut = () => {
-  localStorage.removeItem(STORAGE_KEY);
+  clearCurrentUserId();
 };
 
 export const isAuthenticated = () => {
-  return localStorage.getItem(STORAGE_KEY) !== null;
+  return Boolean(getCurrentBackendUser());
 };
 
-export const getAuthUserId = () => {
-  return localStorage.getItem(STORAGE_KEY);
+export const getAuthUser = () => {
+  return getCurrentBackendUser();
 };
