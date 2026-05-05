@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
+
 import Login from './pages/user/Login';
 import Home from './pages/user/Home';
 import ProductDetail from './pages/user/ProductDetail';
@@ -7,14 +8,15 @@ import Perfil from './pages/user/Perfil';
 import Configuracoes from './pages/user/Configuracoes';
 import Sugestao from './pages/user/Sugestao';
 import Historico from './pages/user/Historico';
+import RecuperarSenha from './pages/user/RecuperarSenha';
 
-import AdminLogin from './pages/admin/AdminLogin';
 import Dashboard from './pages/admin/Dashboard';
 import Agendamentos from './pages/admin/Agendamentos';
 import Produtos from './pages/admin/Produtos';
 import EditarProduto from './pages/admin/EditarProduto';
-import CadastrarProduto from "./pages/admin/CadastrarProduto";
-import RecuperarSenha from "./pages/user/RecuperarSenha";
+import CadastrarProduto from './pages/admin/CadastrarProduto';
+
+import RequireAuth from './components/auth/RequireAuth';
 
 export const router = createBrowserRouter([
   {
@@ -26,32 +28,37 @@ export const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: '/produto/:id',
-    element: <ProductDetail />,
-  },
-  {
     path: '/cadastro',
     element: <Cadastro />,
   },
   {
-    path: '/perfil',
-    element: <Perfil />,
+    path: '/recuperar-senha',
+    element: <RecuperarSenha />,
   },
   {
-    path: '/configuracoes',
-    element: <Configuracoes />,
-  },
-  {
-    path: '/sugestao',
-    element: <Sugestao />,
-  },
-  {
-    path: '/historico',
-    element: <Historico />,
-  },
-  {
-    path: '/admin/login',
-    element: <AdminLogin />,
+    element: <RequireAuth />,
+    children: [
+      {
+        path: 'produto/:id',
+        element: <ProductDetail />,
+      },
+      {
+        path: 'perfil',
+        element: <Perfil />,
+      },
+      {
+        path: 'configuracoes',
+        element: <Configuracoes />,
+      },
+      {
+        path: 'sugestao',
+        element: <Sugestao />,
+      },
+      {
+        path: 'historico',
+        element: <Historico />,
+      },
+    ],
   },
   {
     path: '/admin/dashboard',
@@ -70,11 +77,7 @@ export const router = createBrowserRouter([
     element: <EditarProduto />,
   },
   {
-    path: "/admin/produtos/cadastrar",
+    path: '/admin/produtos/cadastrar',
     element: <CadastrarProduto />,
-  },
-  {
-    path: "/recuperar",
-    element: <RecuperarSenha />,
   },
 ]);

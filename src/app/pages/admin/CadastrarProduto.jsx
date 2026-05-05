@@ -10,20 +10,22 @@ export default function CadastrarProduto() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    name: "",
-    image: "",
-    price: "",
-    discount: "0",
-    stock: "",
-    validity: "",
-    description: "",
+    nome: "",
+    descricao: "",
+    valor: "",
+    desconto: "0",
+    quantidade: "",
+    cor: "",
+    tamanho: "",
+    sku: "",
+    image_url: "",
   });
 
-  const finalPrice = useMemo(() => {
-    const price = Number(formData.price) || 0;
-    const discount = Number(formData.discount) || 0;
-    return price - price * (discount / 100);
-  }, [formData.price, formData.discount]);
+  const valorFinal = useMemo(() => {
+    const valor = Number(formData.valor) || 0;
+    const desconto = Number(formData.desconto) || 0;
+    return valor - valor * (desconto / 100);
+  }, [formData.valor, formData.desconto]);
 
   const handleChange = (field) => (event) => {
     setFormData((current) => ({
@@ -36,14 +38,16 @@ export default function CadastrarProduto() {
     event.preventDefault();
 
     const payload = {
-      name: formData.name,
-      image: formData.image,
-      price: Number(formData.price),
-      discount: Number(formData.discount),
-      finalPrice,
-      stock: Number(formData.stock),
-      validity: formData.validity,
-      description: formData.description,
+      nome: formData.nome,
+      descricao: formData.descricao,
+      valor: Number(formData.valor),
+      desconto: Number(formData.desconto),
+      valor_final: valorFinal,
+      quantidade: Number(formData.quantidade),
+      cor: formData.cor,
+      tamanho: formData.tamanho,
+      sku: formData.sku,
+      image_url: formData.image_url,
     };
 
     console.log("Novo produto (base para backend):", payload);
@@ -83,14 +87,27 @@ export default function CadastrarProduto() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Nome do produto
+                    Nome
                   </label>
                   <input
                     type="text"
-                    value={formData.name}
-                    onChange={handleChange("name")}
+                    value={formData.nome}
+                    onChange={handleChange("nome")}
                     className="w-full rounded-lg border border-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                    placeholder="Ex: Moletom Insper Premium"
+                    placeholder="Ex: Camiseta"
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Descrição
+                  </label>
+                  <textarea
+                    value={formData.descricao}
+                    onChange={handleChange("descricao")}
+                    rows={4}
+                    className="w-full rounded-lg border border-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none"
+                    placeholder="Ex: Camiseta preta básica"
                   />
                 </div>
 
@@ -100,38 +117,25 @@ export default function CadastrarProduto() {
                   </label>
                   <input
                     type="text"
-                    value={formData.image}
-                    onChange={handleChange("image")}
+                    value={formData.image_url}
+                    onChange={handleChange("image_url")}
                     className="w-full rounded-lg border border-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                     placeholder="https://..."
                   />
                 </div>
 
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Descrição
-                  </label>
-                  <textarea
-                    value={formData.description}
-                    onChange={handleChange("description")}
-                    rows={4}
-                    className="w-full rounded-lg border border-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none"
-                    placeholder="Descreva o produto"
-                  />
-                </div>
-
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Preço original
+                    Valor
                   </label>
                   <input
                     type="number"
                     step="0.01"
                     min="0"
-                    value={formData.price}
-                    onChange={handleChange("price")}
+                    value={formData.valor}
+                    onChange={handleChange("valor")}
                     className="w-full rounded-lg border border-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                    placeholder="0.00"
+                    placeholder="59.90"
                   />
                 </div>
 
@@ -144,38 +148,64 @@ export default function CadastrarProduto() {
                     step="1"
                     min="0"
                     max="100"
-                    value={formData.discount}
-                    onChange={handleChange("discount")}
+                    value={formData.desconto}
+                    onChange={handleChange("desconto")}
                     className="w-full rounded-lg border border-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                    placeholder="0"
+                    placeholder="10"
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Estoque
+                    Quantidade
                   </label>
                   <input
                     type="number"
                     step="1"
                     min="0"
-                    value={formData.stock}
-                    onChange={handleChange("stock")}
+                    value={formData.quantidade}
+                    onChange={handleChange("quantidade")}
                     className="w-full rounded-lg border border-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                    placeholder="0"
+                    placeholder="10"
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Validade
+                    Cor
                   </label>
                   <input
                     type="text"
-                    value={formData.validity}
-                    onChange={handleChange("validity")}
+                    value={formData.cor}
+                    onChange={handleChange("cor")}
                     className="w-full rounded-lg border border-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                    placeholder="31/12/2027"
+                    placeholder="preto"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Tamanho
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.tamanho}
+                    onChange={handleChange("tamanho")}
+                    className="w-full rounded-lg border border-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    placeholder="M"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    SKU
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.sku}
+                    onChange={handleChange("sku")}
+                    className="w-full rounded-lg border border-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    placeholder="CAM-PRE-M"
                   />
                 </div>
               </div>
@@ -206,10 +236,10 @@ export default function CadastrarProduto() {
 
               <div className="space-y-4">
                 <div className="aspect-square rounded-xl overflow-hidden border border-border bg-muted flex items-center justify-center">
-                  {formData.image ? (
+                  {formData.image_url ? (
                     <img
-                      src={formData.image}
-                      alt={formData.name || "Prévia do produto"}
+                      src={formData.image_url}
+                      alt={formData.nome || "Prévia do produto"}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -222,27 +252,38 @@ export default function CadastrarProduto() {
 
                 <div>
                   <h3 className="text-xl font-bold text-foreground">
-                    {formData.name || "Nome do produto"}
+                    {formData.nome || "Nome do produto"}
                   </h3>
                   <p className="text-muted-foreground text-sm mt-1">
-                    Validade: {formData.validity || "—"}
+                    {formData.descricao || "Descrição do produto"}
                   </p>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Preço final</span>
+                  <span className="text-muted-foreground">Valor final</span>
                   <span className="text-lg font-bold text-primary">
-                    R$ {finalPrice.toFixed(2)}
+                    R$ {valorFinal.toFixed(2)}
                   </span>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Estoque</span>
+                  <span className="text-muted-foreground">Quantidade</span>
                   <span className="font-semibold text-foreground">
-                    {formData.stock || "0"} un.
+                    {formData.quantidade || "0"} un.
                   </span>
                 </div>
               </div>
+            </Card>
+
+            <Card className="p-6 border-dashed border-border">
+              <h2 className="text-lg font-semibold text-foreground mb-2">
+                Pronto para o backend
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Quando o Mongo estiver integrado, este formulário pode enviar um
+                <code className="mx-1 px-1.5 py-0.5 rounded bg-muted">POST</code>
+                com os mesmos nomes do documento do banco.
+              </p>
             </Card>
           </div>
         </div>

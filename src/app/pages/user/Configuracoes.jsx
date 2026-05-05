@@ -6,20 +6,30 @@ import { Button } from '../../components/ui/Button';
 import { useTheme } from '../../context/ThemeContext';
 import { Settings, Bell, Shield, Palette } from 'lucide-react';
 import { Footer } from '../../components/layout/Footer';
+import { isAuthenticated } from "../../utils/auth";
+import { currentUser } from "../../../data/user";
+import { currentUser as getCurrentUser } from "../../../data/user";
 
 export default function Configuracoes() {
   const navigate = useNavigate();
+  const currentUser = getCurrentUser();
   const { theme, toggleTheme } = useTheme();
-  const [notifications, setNotifications] = useState(true);
-  const [emailPromotions, setEmailPromotions] = useState(true);
+  const [notifications, setNotifications] = useState(
+    currentUser.notificacoes_push
+  );
+  const [emailPromotions, setEmailPromotions] = useState(
+    currentUser.promocoes_email
+  );
 
   const handleSave = () => {
     alert('Configurações salvas com sucesso!');
   };
 
+  const isLoggedIn = isAuthenticated();
+  
   return (
     <div className="min-h-screen bg-background">
-      <Header isLoggedIn={true} userName="João Silva" />
+      <Header isLoggedIn={isLoggedIn} userName={currentUser?.nome ?? ''} />
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">

@@ -6,6 +6,9 @@ import { Button } from "../../components/ui/Button";
 import { ArrowLeft, Package } from "lucide-react";
 import { Footer } from "../../components/layout/Footer";
 import { UserCancellationModal } from "../../components/ui/UserCancellationModal";
+import { isAuthenticated } from "../../utils/auth";
+import { currentUser } from "../../../data/user";
+import { currentUser as getCurrentUser } from "../../../data/user";
 
 const reservationHistory = [
   {
@@ -61,9 +64,12 @@ export default function Historico() {
     setSelectedReservation(null);
   };
 
+  const isLoggedIn = isAuthenticated();
+  const currentUser = getCurrentUser();
+
   return (
     <div className="min-h-screen bg-background">
-      <Header isLoggedIn={true} userName="João Silva" />
+      <Header isLoggedIn={isLoggedIn} userName={currentUser?.nome ?? ''} />
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <button

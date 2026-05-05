@@ -6,7 +6,7 @@ import { PromotionBadge } from './PromotionBadge';
 
 export const ProductCard = ({ id, name, description, price, originalPrice, discount, image }) => {
   const navigate = useNavigate();
-  const hasPromotion = discount && discount > 0;
+  const hasPromotion = Number(discount) > 0;
 
   return (
     <Card

@@ -4,95 +4,24 @@ import { Header } from '../../components/layout/Header';
 import { ProductCarousel } from '../../components/product/ProductCarousel';
 import { ProductCard } from '../../components/product/ProductCard';
 import { Footer } from '../../components/layout/Footer';
+import { backendProducts, mapBackendProductToUi } from "../../../data/products";
+import { isAuthenticated } from "../../utils/auth";
+import { currentUser } from "../../../data/user";
+import { currentUser as getCurrentUser } from "../../../data/user";
 
-const featuredProducts = [
-  {
-    id: 7,
-    name: 'Moletom Insper Edição Limitada',
-    price: 199.90,
-    originalPrice: 249.90,
-    discount: 20,
-    description: 'Moletom premium em edição limitada com bordado exclusivo',
-    image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=500&fit=crop'
-  },
-  {
-    id: 8,
-    name: 'Kit Insper Completo',
-    price: 349.90,
-    originalPrice: 449.90,
-    discount: 22,
-    description: 'Kit completo com moletom, camiseta e boné',
-    image: 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=500&fit=crop'
-  },
-  {
-    id: 9,
-    name: 'Jaqueta Insper Premium',
-    price: 299.90,
-    description: 'Jaqueta premium com forro interno e logo bordado',
-    image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&h=500&fit=crop'
-  }
-];
+const products = backendProducts.map(mapBackendProductToUi);
+const featuredProducts = products.filter(
+  (product) => Number(product.discount) > 0
+)
 
-const products = [
-  {
-    id: 1,
-    name: 'Moletom Insper Premium',
-    description: 'Moletom premium em edição limitada com bordado exclusivo',
-    price: 151.92,
-    originalPrice: 189.90,
-    discount: 20,
-    image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=400&fit=crop'
-  },
-  {
-    id: 2,
-    name: 'Camiseta Insper Básica',
-    description: 'Camiseta confortável para o dia a dia.',
-    price: 71.91,
-    originalPrice: 79.90,
-    discount: 10,
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop'
-  },
-  {
-    id: 3,
-    name: 'Boné Insper',
-    description: 'Boné leve com ajuste regulável.',
-    price: 59.90,
-    image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&h=400&fit=crop'
-  },
-  {
-    id: 4,
-    name: 'Mochila Insper',
-    description: 'Design moderno com compartimentos funcionais, garantindo organização e praticidade para sua rotina.',
-    price: 212.42,
-    originalPrice: 249.90,
-    discount: 15,
-    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop'
-  },
-  {
-    id: 5,
-    name: 'Caneca Insper',
-    description: 'Caneca resistente e elegante, perfeita para seu café do dia a dia.',
-    price: 39.90,
-    image: 'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=400&h=400&fit=crop'
-  },
-  {
-    id: 6,
-    name: 'Garrafa Térmica',
-    description: 'Garrafa térmica que mantém sua bebida na temperatura ideal por horas.',
-    price: 71.92,
-    originalPrice: 89.90,
-    discount: 20,
-    image: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400&h=400&fit=crop'
-  },
-];
 
 export default function Home() {
-  const [isLoggedIn] = useState(true);
+  const isLoggedIn = isAuthenticated();
+  const currentUser = getCurrentUser();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-accent">
-      <Header isLoggedIn={isLoggedIn} userName="João Silva" isAdmin={true} />
-
+      <Header isLoggedIn={isLoggedIn} userName={currentUser?.nome ?? ''} />
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <motion.section
           initial={{ opacity: 0, y: 20 }}

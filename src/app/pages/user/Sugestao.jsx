@@ -5,6 +5,9 @@ import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { MessageSquarePlus } from 'lucide-react';
 import { Footer } from '../../components/layout/Footer';
+import { isAuthenticated } from "../../utils/auth";
+import { currentUser } from "../../../data/user";
+import { currentUser as getCurrentUser } from "../../../data/user";
 
 export default function Sugestao() {
   const navigate = useNavigate();
@@ -17,9 +20,12 @@ export default function Sugestao() {
     navigate('/');
   };
 
+  const isLoggedIn = isAuthenticated();
+  const currentUser = getCurrentUser();
+
   return (
     <div className="min-h-screen bg-background">
-      <Header isLoggedIn={true} userName="João Silva" />
+      <Header isLoggedIn={isLoggedIn} userName={currentUser?.nome ?? ''} />
 
       <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-8">

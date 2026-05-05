@@ -7,6 +7,9 @@ import { Input } from '../../components/ui/Input';
 import { PromotionBadge } from '../../components/product/PromotionBadge';
 import { ArrowLeft, Minus, Plus, Tag } from 'lucide-react';
 import { Footer } from '../../components/layout/Footer';
+import { isAuthenticated } from "../../utils/auth";
+import { currentUser } from "../../../data/user";
+import { currentUser as getCurrentUser } from "../../../data/user";
 
 const productDetails = {
   1: {
@@ -58,15 +61,18 @@ export default function ProductDetail() {
 
   const product = productDetails[Number(id)] || productDetails[1];
   const hasPromotion = product.discount && product.discount > 0;
+  const currentUser = getCurrentUser();
 
   const handleReserve = () => {
     alert(`Produto reservado com sucesso!\nQuantidade: ${quantity}\nTamanho: ${selectedSize}\nCor: ${selectedColor}`);
     navigate('/perfil');
   };
 
+  const isLoggedIn = isAuthenticated();
+
   return (
     <div className="min-h-screen bg-background">
-      <Header isLoggedIn={true} userName="João Silva" />
+      <Header isLoggedIn={isLoggedIn} userName={currentUser?.nome ?? ''} />
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <button

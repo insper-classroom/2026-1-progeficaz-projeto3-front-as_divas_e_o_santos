@@ -1,11 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingBag, User, LogOut, Settings, MessageSquarePlus, Shield } from 'lucide-react';
+import { User, LogOut, Settings, MessageSquarePlus, Shield } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { ThemeToggle } from '../ui/ThemeToggle';
 import logo from "../../../assets/logo-insper.png";
 import logoTextLight from "../../../assets/loja-insper.png";
+import { signOut } from "../../utils/auth";
 
-export const Header = ({ isLoggedIn = false, userName, isAdmin = false }) => {
+export const Header = ({ isLoggedIn = false, userName }) => {
   const navigate = useNavigate();
 
   return (
@@ -57,7 +58,10 @@ export const Header = ({ isLoggedIn = false, userName, isAdmin = false }) => {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => navigate('/login')}
+                  onClick={() => {
+                    signOut();
+                    navigate("/login");
+                  }}
                   className="gap-1.5"
                 >
                   <LogOut className="w-4 h-4" />

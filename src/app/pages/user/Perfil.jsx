@@ -6,6 +6,8 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { User, Calendar, History } from 'lucide-react';
 import { Footer } from '../../components/layout/Footer';
+import { isAuthenticated } from "../../utils/auth";
+import { currentUser as getCurrentUser } from "../../../data/user";
 
 const upcomingReservations = [
   {
@@ -24,7 +26,9 @@ const upcomingReservations = [
 
 export default function Perfil() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('joao.silva@insper.edu.br');
+  const currentUser = getCurrentUser();
+  const isLoggedIn = isAuthenticated();
+  const [email, setEmail] = useState(currentUser?.email ?? '');
   const [newPassword, setNewPassword] = useState('');
   const [isEditing, setIsEditing] = useState(false);
 
@@ -37,7 +41,7 @@ export default function Perfil() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header isLoggedIn={true} userName="João Silva" />
+      <Header isLoggedIn={isLoggedIn} userName={currentUser?.nome ?? ''} />
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
@@ -46,7 +50,9 @@ export default function Perfil() {
               <User className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Olá, João Silva!</h1>
+              <h1 className="text-3xl font-bold text-foreground">
+                Olá, {currentUser?.nome ?? ''}!
+              </h1>
               <p className="text-muted-foreground">Gerencie seu perfil e reservas</p>
             </div>
           </div>
@@ -89,7 +95,7 @@ export default function Perfil() {
                     className="w-full"
                     onClick={() => {
                       setIsEditing(false);
-                      setEmail('joao.silva@insper.edu.br');
+                      setEmail(currentUser?.email ?? '');
                       setNewPassword('');
                     }}
                   >
